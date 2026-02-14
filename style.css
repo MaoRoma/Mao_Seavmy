@@ -1,0 +1,822 @@
+/* =========================
+   VARIABLES & RESET
+   ========================= */
+:root {
+    /* Trading Dashboard Palette */
+    --bg-main: #05080f;
+    /* Almost black */
+    --bg-panel: #0b121e;
+    /* Dark Navy */
+    --bg-card: #101926;
+    /* Slightly Lighter Navy */
+
+    --text-main: #e2e8f0;
+    /* Bright Grey/White */
+    --text-muted: #64748b;
+    /* Slate Grey */
+
+    --accent: #00ff88;
+    /* Neon Green - Profit/Action */
+    --accent-glow: rgba(0, 255, 136, 0.15);
+    --accent-gold: #ffd700;
+    /* Gold - Premium/XAU */
+    --accent-red: #ff3366;
+    /* Red - Down/Stop Loss */
+
+    --border-light: rgba(255, 255, 255, 0.08);
+    --border-accent: rgba(0, 255, 136, 0.5);
+
+    --font-ui: 'Inter', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+
+    --container-max: 1200px;
+    /* Wider for dashboard feel */
+    --radius: 4px;
+    /* Sharper corners for trading feel */
+    --radius-lg: 8px;
+
+    --trans: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    font-family: var(--font-ui);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    padding-top: 40px;
+    /* Space for ticker */
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: var(--trans);
+}
+
+ul {
+    list-style: none;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+/* =========================
+   UTILITIES
+   ========================= */
+.container {
+    width: 90%;
+    max-width: var(--container-max);
+    margin: 0 auto;
+}
+
+.section {
+    padding: 6rem 0;
+    position: relative;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.narrow {
+    max-width: 700px;
+}
+
+.center {
+    text-align: center;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.8rem 1.8rem;
+    border-radius: var(--radius);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    font-size: 0.9rem;
+    transition: var(--trans);
+    cursor: pointer;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+}
+
+.btn-primary {
+    background-color: var(--accent);
+    color: #000;
+    border: 1px solid var(--accent);
+}
+
+.btn-primary:hover {
+    background-color: transparent;
+    color: var(--accent);
+    box-shadow: 0 0 20px var(--accent-glow);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border-light);
+    margin-left: 1rem;
+}
+
+.btn-outline:hover {
+    border-color: var(--text-main);
+    color: var(--text-main);
+}
+
+/* =========================
+   TICKER BAR
+   ========================= */
+.ticker-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    background: #020408;
+    border-bottom: 1px solid var(--border-light);
+    z-index: 200;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+}
+
+.ticker-content {
+    display: flex;
+    animation: ticker 30s linear infinite;
+    gap: 3rem;
+    white-space: nowrap;
+    padding-left: 2rem;
+}
+
+.ticker-item {
+    color: var(--text-muted);
+    display: flex;
+    gap: 0.5rem;
+}
+
+.up {
+    color: var(--accent);
+}
+
+.down {
+    color: var(--accent-red);
+}
+
+@keyframes ticker {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+/* =========================
+   HEADER
+   ========================= */
+.site-header {
+    position: fixed;
+    top: 40px;
+    /* Below ticker */
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    padding: 1rem 0;
+    backdrop-filter: blur(12px);
+    background: rgba(5, 8, 15, 0.85);
+    border-bottom: 1px solid var(--border-light);
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--text-main);
+    letter-spacing: -0.03em;
+    font-family: var(--font-ui);
+}
+
+.brand .dot {
+    color: var(--accent);
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-links a {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    position: relative;
+    padding: 0.5rem 0;
+}
+
+.nav-links a:hover {
+    color: var(--accent);
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--accent);
+    transition: var(--trans);
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+.btn-nav {
+    color: var(--accent) !important;
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    padding: 0.4rem 1rem !important;
+    border-radius: var(--radius);
+}
+
+.btn-nav:hover {
+    background: rgba(0, 255, 136, 0.1);
+}
+
+/* Mobile Toggle */
+/* Mobile Toggle */
+.nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    padding: 0.5rem;
+    z-index: 101;
+}
+
+.nav-toggle .bar {
+    width: 25px;
+    height: 2px;
+    background: var(--text-main);
+    transition: var(--trans);
+    transform-origin: center;
+}
+
+.nav-toggle.open .bar:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+
+.nav-toggle.open .bar:nth-child(2) {
+    opacity: 0;
+}
+
+.nav-toggle.open .bar:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+}
+
+/* =========================
+   HERO
+   ========================= */
+.hero {
+    min-height: 90vh;
+    /* Account for ticker */
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    background: linear-gradient(to bottom, rgba(5, 8, 15, 0.5), var(--bg-main)), url('hero-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* Grid Background Effect */
+.background-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(var(--border-light) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border-light) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.07;
+    z-index: -1;
+    mask-image: radial-gradient(circle at center, black, transparent 80%);
+}
+
+.hero-inner {
+    display: grid;
+    grid-template-columns: 1.3fr 0.7fr;
+    gap: 4rem;
+    align-items: center;
+}
+
+.hero-eyebrow {
+    font-family: var(--font-mono);
+    color: var(--accent);
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.hero-name {
+    font-size: clamp(3rem, 5vw, 5rem);
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    margin-bottom: 1rem;
+    background: linear-gradient(to right, #fff, #94a3b8);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-title {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    font-weight: 400;
+}
+
+.hero-title .divider {
+    color: var(--accent);
+    margin: 0 0.5rem;
+}
+
+.hero-bio {
+    max-width: 550px;
+    margin-bottom: 2.5rem;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
+
+/* Trader Visual Card */
+.hero-visual {
+    display: flex;
+    justify-content: center;
+}
+
+.trader-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    width: 320px;
+    position: relative;
+    box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.5);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--accent);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 0.5;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0.5;
+    }
+}
+
+.img-wrapper {
+    width: 100%;
+    height: 320px;
+    overflow: hidden;
+    border-radius: var(--radius);
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border-light);
+}
+
+.profile-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(20%) contrast(110%);
+}
+
+.card-stats {
+    display: flex;
+    justify-content: space-between;
+    border-top: 1px solid var(--border-light);
+    padding-top: 1rem;
+}
+
+.c-stat {
+    display: flex;
+    flex-direction: column;
+}
+
+.c-stat .label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.2rem;
+}
+
+.c-stat .value {
+    font-family: var(--font-mono);
+    font-weight: 600;
+}
+
+.c-stat .highlight {
+    color: var(--accent);
+}
+
+/* =========================
+   SECTION HEADERS
+   ========================= */
+.section-header {
+    margin-bottom: 3rem;
+}
+
+.section-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    letter-spacing: -0.02em;
+}
+
+.section-line {
+    width: 60px;
+    height: 3px;
+    background: var(--accent);
+}
+
+.center-line {
+    margin: 0 auto;
+}
+
+/* =========================
+   ABOUT
+   ========================= */
+.about-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 4rem;
+}
+
+.about-card h3 {
+    margin-bottom: 1.5rem;
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+.about-card p {
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+}
+
+.stats-box {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-light);
+    padding: 2rem;
+    border-radius: var(--radius-lg);
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border-light);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+}
+
+.stat-row:last-child {
+    border-bottom: none;
+}
+
+.s-label {
+    color: var(--text-muted);
+}
+
+.s-value {
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+/* =========================
+   MARKETS (DASHBOARD)
+   ========================= */
+.markets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.market-panel {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    transition: var(--trans);
+    position: relative;
+    overflow: hidden;
+}
+
+.market-panel:hover {
+    transform: translateY(-5px);
+    border-color: var(--text-muted);
+}
+
+.market-panel.accent-border {
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    /* Gold border for Gold */
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.m-icon {
+    font-size: 1.25rem;
+}
+
+.panel-header h4 {
+    font-weight: 600;
+    letter-spacing: -0.01em;
+}
+
+.panel-body {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+}
+
+.p-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.p-row span:first-child {
+    color: var(--text-muted);
+}
+
+.high {
+    color: var(--accent);
+}
+
+.gold {
+    color: var(--accent-gold);
+}
+
+.chart-bar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 2px;
+    margin-top: 1rem;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent);
+}
+
+.gold-fill {
+    background: var(--accent-gold);
+    box-shadow: 0 0 10px var(--accent-gold);
+}
+
+/* =========================
+   STRATEGY
+   ========================= */
+.strategy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2rem;
+}
+
+.strategy-card {
+    background: transparent;
+    border: 1px solid var(--border-light);
+    padding: 2rem;
+    border-radius: var(--radius);
+    transition: var(--trans);
+}
+
+.strategy-card:hover {
+    background: var(--bg-panel);
+    border-color: var(--accent);
+}
+
+.card-top {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.s-icon {
+    font-size: 1.5rem;
+}
+
+.strategy-card h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.strategy-card p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+/* =========================
+   CONTACT
+   ========================= */
+.contact-section {
+    background: linear-gradient(to top, rgba(0, 255, 136, 0.02), transparent);
+}
+
+.section-text {
+    margin: 2rem 0;
+    color: var(--text-muted);
+}
+
+.contact-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.email-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 1.2rem;
+    color: var(--text-main);
+    border: 1px solid var(--border-light);
+    padding: 1rem 2rem;
+    border-radius: var(--radius);
+    background: var(--bg-panel);
+}
+
+.email-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.social-links {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+/* =========================
+   FOOTER
+   ========================= */
+.site-footer {
+    padding: 2rem 0;
+    border-top: 1px solid var(--border-light);
+    text-align: center;
+    background: var(--bg-main);
+}
+
+.footer-content p {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+}
+
+.disclaimer {
+    font-size: 0.75rem !important;
+    opacity: 0.6;
+}
+
+/* =========================
+   ANIMATIONS
+   ========================= */
+.reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.8s ease-out;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+    }
+
+    .nav-toggle {
+        display: flex;
+    }
+
+    .nav.open .nav-links {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: var(--bg-panel);
+        padding: 2rem;
+        border-bottom: 1px solid var(--border-light);
+        align-items: center;
+    }
+
+    .hero-inner {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 3rem;
+    }
+
+    .hero-content {
+        order: 2;
+    }
+
+    .hero-visual {
+        order: 1;
+    }
+
+    .hero-actions {
+        justify-content: center;
+    }
+
+    .hero-bio {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .about-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .ticker-bar {
+        display: none;
+    }
+
+    /* Hide ticker on small mobile to save space? Or keep it. Let's keep it but scroll might be fast. */
+
+    body {
+        padding-top: 40px;
+    }
+}
